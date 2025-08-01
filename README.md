@@ -1,6 +1,6 @@
 # golang-snippets
 
-## コード整形コマンド
+## コード整形
 ```
 gofmt -w yourfile.go
 ```
