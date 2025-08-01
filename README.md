@@ -9,3 +9,8 @@ gofmt -w yourfile.go
 ```
 go run yourfile.go
 ```
+
+## go mod 初期化
+```
+go mod init my-app
+```
