@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{.Query}} の検索結果</title>
+  </head>
+  <body>
+    <h1>「{{.Query}}」の検索結果</h1>
+    {{if .Repos}}
+      <ul>
+        {{range .Repos}}
+          <li>
+            <a href="{{.HTMLURL}}" target="_blank">{{.Name}}</a><br>
+            ⭐️ {{.Stars}}<br>
+            <small>{{.Description}}</small>
+          </li>
+        {{end}}
+      </ul>
+    {{else}}
+      <p>結果がみつかりませんでした。</p>
+    {{end}}
+  
+    <p><a href="/">← 戻る</a></p>
+  </body>
+</html>
