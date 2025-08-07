@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JST ⇄ UTC 日時変換</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+    }
+
+    .container {
+      display: flex;
+      align-items: flex-end;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.2em;
+    }
+
+    input, select, button {
+      padding: 0.5em;
+      font-size: 1em;
+    }
+
+    select#from {
+      width: 8ch;
+    }
+
+    input#resultType {
+      width: 6ch;
+    }
+
+    input#time,
+    input#resultTime {
+      width: 200px;
+    }
+
+    button {
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>JST ⇄ UTC 日時変換</h1>
+
+  <form id="convertForm">
+    <div class="container">
+      <!-- JST/UTC 選択 -->
+      <div class="field">
+        <label for="from">変換元</label>
+        <select id="from" name="from">
+          <option value="jst">JST</option>
+          <option value="utc">UTC</option>
+        </select>
+      </div>
+
+      <!-- 日時入力 -->
+      <div class="field">
+        <label for="time">日時</label>
+        <input type="text" id="time" name="time" placeholder="2025-08-03 12:00:00" required>
+      </div>
+
+      <!-- 変換ボタン -->
+      <div class="field" style="justify-content: flex-end;">
+        <label>&nbsp;</label>
+        <button type="submit">変換</button>
+      </div>
+
+      <!-- 結果のタイムゾーン -->
+      <div class="field">
+        <label for="resultType">変換後</label>
+        <input type="text" id="resultType" readonly>
+      </div>
+
+      <!-- 結果の日時 -->
+      <div class="field">
+        <label for="resultTime">日時</label>
+        <input type="text" id="resultTime" readonly>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById("convertForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const time = document.getElementById("time").value;
+      const from = document.getElementById("from").value;
+
+      const res = await fetch("/api/convert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ time, from })
+      });
+
+      const data = await res.json();
+      const resultType = document.getElementById("resultType");
+      const resultTime = document.getElementById("resultTime");
+
+      if (data.error) {
+        resultType.value = "ERR";
+        resultTime.value = data.error;
+      } else {
+        resultType.value = from === "jst" ? "UTC" : "JST";
+        resultTime.value = data.result;
+      }
+    });
+  </script>
+</body>
+</html>
